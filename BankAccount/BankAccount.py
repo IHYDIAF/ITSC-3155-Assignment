@@ -1,5 +1,9 @@
 ### Data ###
 
+_account_number = "000123456789"
+
+__routing_number = "110000123"
+
 class Account:
     def __init__(self, balance=0):
         self.balance = balance
