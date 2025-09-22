@@ -1,5 +1,40 @@
 ### Data ###
 
+class Account:
+    def __init__(self, balance=0):
+        self.balance = balance
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+
+    def withdraw(self, amount):
+        if 0 < amount <= self.balance:
+            self.balance -= amount
+            return True
+        return False
+
+class SavingsAccount(Account):
+    def __init__(self, balance=0, interest_rate=0.02):
+        super().__init__(balance)
+        self.interest_rate = interest_rate
+
+    def add_interest(self):
+        interest = self.balance * self.interest_rate
+        self.balance += interest
+        return interest
+
+class CheckingAccount(Account):
+    def __init__(self, balance=0, transfer_limit=500):
+        super().__init__(balance)
+        self.transfer_limit = transfer_limit
+
+    def transfer(self, amount, target_account):
+        if 0 < amount <= self.transfer_limit and self.withdraw(amount):
+            target_account.deposit(amount)
+            return True
+        return False
+
 recipes = {
     "small": {
         "ingredients": {
