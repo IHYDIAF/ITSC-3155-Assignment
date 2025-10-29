@@ -158,4 +158,35 @@ def delete_one_resource(resource_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Resource not found")
     return resources.delete(db=db, resource_id=resource_id)
 
+# Order Details Endpoints
+
+@app.post("/order_details/", response_model=schemas.OrderDetails, tags=["Order Details"])
+def create_order_details(order_details: schemas.OrderDetailsCreate, db: Session = Depends(get_db)):
+    return order_details.create(db=db, order_details=order_details)
+
+@app.get("/order_details/", response_model=list[schemas.OrderDetails], tags=["Order Details"])
+def read_order_details(db: Session = Depends(get_db)):
+    return order_details.read_all(db)
+
+@app.get("/order_details/{order_details_id}", response_model=schemas.OrderDetails, tags=["Order Details"])
+def read_one_order_details(order_details_id: int, db: Session = Depends(get_db)):
+    order_details_db = order_details.read_one(db, order_details_id=order_details_id)
+    if order_details_db is None:
+        raise HTTPException(status_code=404, detail="Order Details not found")
+    return order_details_db
+
+@app.put("/order_details/{order_details_id}", response_model=schemas.OrderDetails, tags=["Order Details"])
+def update_one_order_details(order_details_id: int, order_details_update: schemas.OrderDetailsUpdate, db: Session = Depends(get_db)):
+    order_details_db = order_details.read_one(db, order_details_id=order_details_id)
+    if order_details_db is None:
+        raise HTTPException(status_code=404, detail="Order Details not found")
+    return order_details.update(db=db, order_details=order_details_update, order_details_id=order_details_id)
+
+@app.delete("/order_details/{order_details_id}", tags=["Order Details"])
+def delete_one_order_details(order_details_id: int, db: Session = Depends(get_db)):
+    order_details_db = order_details.read_one(db, order_details_id=order_details_id)
+    if order_details_db is None:
+        raise HTTPException(status_code=404, detail="Order Details not found")
+    return order_details.delete(db=db, order_details_id=order_details_id)
+
 
