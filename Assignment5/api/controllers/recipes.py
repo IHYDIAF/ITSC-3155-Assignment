@@ -3,48 +3,49 @@ from fastapi import HTTPException, status, Response, Depends
 from ..models import models, schemas
 
 
-def create(db: Session, sandwich):
-    # Create a new instance of the Sandwich model with the provided data
-    db_sandwich = models.Sandwich(
-        customer_name=sandwich.customer_name,
-        description=sandwich.description
+def create(db: Session, recipes):
+    # Create a new instance of the Recipes model with the provided data
+    db_recipes = models.Recipes(
+        sandwich_id=recipes.sandwich_id,
+        resource_id=recipes.resource_id,
+        amount=recipes.amount
     )
-    # Add the newly created Sandwich object to the database session
-    db.add(db_sandwich)
+    # Add the newly created Recipes object to the database session
+    db.add(db_recipes)
     # Commit the changes to the database
     db.commit()
-    # Refresh the Sandwich object to ensure it reflects the current state in the database
-    db.refresh(db_sandwich)
-    # Return the newly created Sandwich object
-    return db_sandwich
+    # Refresh the Recipes object to ensure it reflects the current state in the database
+    db.refresh(db_recipes)
+    # Return the newly created Recipes object
+    return db_recipes
 
 
 def read_all(db: Session):
-    return db.query(models.Sandwich).all()
+    return db.query(models.Recipes).all()
 
 
-def read_one(db: Session, sandwich_id):
-    return db.query(models.Sandwich).filter(models.Sandwich.id == sandwich_id).first()
+def read_one(db: Session, recipes_id):
+    return db.query(models.Recipes).filter(models.Recipes.id == recipes_id).first()
 
 
-def update(db: Session, sandwich_id, sandwich):
-    # Query the database for the specific sandwich to update
-    db_sandwich = db.query(models.Sandwich).filter(models.Sandwich.id == sandwich_id)
-    # Extract the update data from the provided 'sandwich' object
-    update_data = sandwich.model_dump(exclude_unset=True)
+def update(db: Session, recipes_id, recipes):
+    # Query the database for the specific recipes to update
+    db_recipes = db.query(models.Recipes).filter(models.Recipes.id == recipes_id)
+    # Extract the update data from the provided 'recipes' object
+    update_data = recipes.model_dump(exclude_unset=True)
     # Update the database record with the new data, without synchronizing the session
-    db_sandwich.update(update_data, synchronize_session=False)
+    db_recipes.update(update_data, synchronize_session=False)
     # Commit the changes to the database
     db.commit()
-    # Return the updated sandwich record
-    return db_sandwich.first()
+    # Return the updated recipes record
+    return db_recipes.first()
 
 
-def delete(db: Session, sandwich_id):
-    # Query the database for the specific sandwich to delete
-    db_sandwich = db.query(models.Sandwich).filter(models.Sandwich.id == sandwich_id)
+def delete(db: Session, recipes_id):
+    # Query the database for the specific recipes to delete
+    db_recipes = db.query(models.Recipes).filter(models.Recipes.id == recipes_id)
     # Delete the database record without synchronizing the session
-    db_sandwich.delete(synchronize_session=False)
+    db_recipes.delete(synchronize_session=False)
     # Commit the changes to the database
     db.commit()
     # Return a response with a status code indicating success (204 No Content)
